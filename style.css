@@ -1,38 +1,131 @@
+/* Цвета и шрифты */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #121212;
+  color: #ccc;
+  margin: 0;
+  padding: 0;
+}
+
+header, footer {
+  text-align: center;
+  padding: 1.5rem 1rem;
+  background-color: #1f1f1f;
+  border-bottom: 1px solid #333;
+}
+
+footer {
+  border-top: 1px solid #333;
+  font-size: 0.9rem;
+  color: #777;
+}
+
+main {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+h1, h2, h3 {
+  margin-bottom: 0.5rem;
+  color: #eee;
+}
+
+.post {
+  background-color: #222;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 6px;
+  border: 1px solid #333;
+  box-shadow: 0 0 5px #000;
+  transition: box-shadow 0.3s ease;
+}
+
+.post:hover {
+  box-shadow: 0 0 12px #555;
+}
+
+/* Онлайн чат */
+#chat-box {
+  height: 200px;
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  padding: 0.75rem;
+  overflow-y: auto;
+  color: #ddd;
+  font-size: 0.95rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+input[type="text"] {
+  width: 70%;
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #444;
+  background-color: #222;
+  color: #ddd;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+input[type="text"]:focus {
+  border-color: #555;
+}
+
+button {
+  padding: 0.55rem 1.2rem;
+  margin-left: 0.7rem;
+  border: none;
+  border-radius: 6px;
+  background-color: #444;
+  color: #ddd;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #666;
+}
+
 /* Прелоадер */
 #preloader {
   position: fixed;
-  width: 100%;
-  height: 100%;
-  background: #000;
-  z-index: 9999;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #121212;
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 9999;
 }
 
 .loader-text {
-  color: #00ffe5;
-  font-family: 'Orbitron', sans-serif;
-  font-size: 1.8rem;
-  animation: blink 1s infinite;
+  color: #999;
+  font-size: 1.5rem;
+  font-weight: 600;
+  animation: pulse 1.5s infinite;
 }
 
-@keyframes blink {
+@keyframes pulse {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
+  50% { opacity: 0.5; }
 }
 
-/* Скрытие до загрузки */
+/* Скрываем основной контент до загрузки */
 .hidden {
   display: none;
 }
 
-/* Плавное появление */
+/* Плавное появление основного контента */
 #main-content {
-  animation: fadeIn 1.4s ease-in-out;
+  animation: fadeIn 1.2s ease forwards;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(15px);}
+  to { opacity: 1; transform: translateY(0);}
 }
