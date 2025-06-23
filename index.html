@@ -2,50 +2,47 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Clan Kv — CyberForum 228</title>
-  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Clan Kv — Тёмный Форум и Чат</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <!-- 🔄 Прелоадер -->
+  <!-- Загрузочный экран -->
   <div id="preloader">
-    <div class="loader-text">Загрузка... ⚡</div>
+    <div class="loader-text">Загрузка...</div>
   </div>
 
-  <!-- 🌐 Основной контент -->
   <div id="main-content" class="hidden">
-
     <header>
-      <h1>⚡ Clan Kv: CyberForum 228</h1>
-      <p>💬 Онлайн чат и форум без регистрации</p>
+      <h1>Clan Kv — Форум</h1>
+      <p>Онлайн-чат и обсуждения без регистрации</p>
     </header>
 
     <main>
       <section id="forum">
-        <h2>📂 Форум</h2>
-        <div class="post">
-          <h3>[🔥] Лучшие читы для Rust</h3>
-          <p>Поделитесь своим конфигом! Clan Kv одобряет только лучшее.</p>
-        </div>
-        <div class="post">
-          <h3>[💀] Банхаммер истории</h3>
-          <p>Кидайте скрины, обходы античита и жёсткие баны!</p>
-        </div>
+        <h2>Форум</h2>
+        <article class="post">
+          <h3>Лучшие читы для Rust</h3>
+          <p>Обменивайтесь конфигами и советами!</p>
+        </article>
+        <article class="post">
+          <h3>Истории банов</h3>
+          <p>Обсуждаем обходы античитов и забавные случаи.</p>
+        </article>
       </section>
 
       <section id="chat">
-        <h2>💬 Онлайн-чат</h2>
+        <h2>Онлайн-чат</h2>
         <div id="chat-box"></div>
-        <input type="text" id="msgInput" placeholder="Напиши что-нибудь..." />
+        <input type="text" id="msgInput" placeholder="Напишите сообщение..." />
         <button onclick="sendMsg()">Отправить</button>
       </section>
     </main>
 
     <footer>
-      <p>🌐 Clan Kv | Cyberpunk Portal | 2025</p>
+      <p>© 2025 Clan Kv</p>
     </footer>
-
   </div>
 
   <script src="script.js"></script>
