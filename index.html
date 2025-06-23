@@ -1,41 +1,52 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Clan Kv — CyberForum 228</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>⚡ Clan Kv: CyberForum 228</h1>
-    <p>💬 Онлайн чат и форум без регистрации</p>
-  </header>
 
-  <main>
-    <section id="forum">
-      <h2>📂 Форум</h2>
-      <div class="post">
-        <h3>[🔥] Лучшие читы для Rust</h3>
-        <p>Поделитесь своим конфигом! Clan Kv одобряет только лучшее.</p>
-      </div>
-      <div class="post">
-        <h3>[💀] Банхаммер истории</h3>
-        <p>Сюда кидаем скрины, где кого забанили или мы обошли античит!</p>
-      </div>
-    </section>
+  <!-- 🔄 Прелоадер -->
+  <div id="preloader">
+    <div class="loader-text">Загрузка... ⚡</div>
+  </div>
 
-    <section id="chat">
-      <h2>💬 Онлайн-чат</h2>
-      <div id="chat-box"></div>
-      <input type="text" id="msgInput" placeholder="Напиши что-нибудь..." />
-      <button onclick="sendMsg()">Отправить</button>
-    </section>
-  </main>
+  <!-- 🌐 Основной контент -->
+  <div id="main-content" class="hidden">
 
-  <footer>
-    <p>🌐 Clan Kv | Cyberpunk Portal | 2025</p>
-  </footer>
+    <header>
+      <h1>⚡ Clan Kv: CyberForum 228</h1>
+      <p>💬 Онлайн чат и форум без регистрации</p>
+    </header>
+
+    <main>
+      <section id="forum">
+        <h2>📂 Форум</h2>
+        <div class="post">
+          <h3>[🔥] Лучшие читы для Rust</h3>
+          <p>Поделитесь своим конфигом! Clan Kv одобряет только лучшее.</p>
+        </div>
+        <div class="post">
+          <h3>[💀] Банхаммер истории</h3>
+          <p>Кидайте скрины, обходы античита и жёсткие баны!</p>
+        </div>
+      </section>
+
+      <section id="chat">
+        <h2>💬 Онлайн-чат</h2>
+        <div id="chat-box"></div>
+        <input type="text" id="msgInput" placeholder="Напиши что-нибудь..." />
+        <button onclick="sendMsg()">Отправить</button>
+      </section>
+    </main>
+
+    <footer>
+      <p>🌐 Clan Kv | Cyberpunk Portal | 2025</p>
+    </footer>
+
+  </div>
 
   <script src="script.js"></script>
 </body>
