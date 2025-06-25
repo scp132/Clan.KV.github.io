@@ -16,41 +16,70 @@
   <div id="main-content" class="hidden">
     <header>
       <h1>Clan Kv — Форум</h1>
-      <p>Добро пожаловать в центр управления и обсуждений</p>
+      <p>Добро пожаловать в центр управления</p>
     </header>
 
     <main>
+      <!-- 📂 Форум -->
       <section id="forum">
         <h2>Форум</h2>
-        <article class="post">
-          <h3>🔥 Лучшие читы для Rust</h3>
-          <p>Поделитесь конфигами, опытом и обходами.</p>
-        </article>
-        <article class="post">
-          <h3>💀 Бан-истории</h3>
-          <p>Расскажите, как вы обошли античит или попались на бан.</p>
-        </article>
+        <div id="forum-posts">
+          <article class="post">
+            <h3>🔥 Лучшие читы для Rust</h3>
+            <p>Поделитесь конфигами и обходами.</p>
+          </article>
+          <article class="post">
+            <h3>💀 Бан-истории</h3>
+            <p>Обсуждаем античиты, обходы и наказания.</p>
+          </article>
+        </div>
       </section>
 
+      <!-- ⚙️ Админ-панель -->
       <section id="admin-panel">
         <h2>🛠️ Панель администратора</h2>
+
         <div class="admin-card">
           <p><strong>➕ Добавить пост</strong></p>
-          <button>Создать тему</button>
+          <button onclick="showAddPost()">Создать тему</button>
         </div>
+
         <div class="admin-card">
           <p><strong>🗑️ Удалить пост</strong></p>
-          <button>Выбрать и удалить</button>
+          <button onclick="showDeleteOptions()">Выбрать и удалить</button>
         </div>
+
         <div class="admin-card">
           <p><strong>👥 Управление пользователями</strong></p>
-          <button>Открыть панель</button>
+          <button onclick="showUserPanel()">Открыть панель</button>
+        </div>
+
+        <!-- 📝 Форма добавления поста -->
+        <div id="add-post-form" class="admin-form hidden">
+          <h3>📌 Новый пост</h3>
+          <input type="text" id="post-title" placeholder="Заголовок поста">
+          <textarea id="post-content" placeholder="Текст поста"></textarea>
+          <button onclick="addPost()">Добавить</button>
+        </div>
+
+        <!-- ❌ Удаление -->
+        <div id="delete-posts" class="admin-form hidden">
+          <h3>🗑️ Выберите посты для удаления</h3>
+          <ul id="post-list"></ul>
+          <button onclick="deleteSelected()">Удалить выбранные</button>
+        </div>
+
+        <!-- 👥 Панель пользователей -->
+        <div id="user-panel" class="admin-form hidden">
+          <h3>👥 Пользователи</h3>
+          <p>Пользователь: <strong>Guest#001</strong> — <em>Обычный</em></p>
+          <p>Пользователь: <strong>RustKing#007</strong> — <em>Модератор</em></p>
         </div>
       </section>
     </main>
 
     <footer>
-      <p>© 2025 Clan Kv | Admin Access</p>
+      <p>© 2025 Clan Kv</p>
     </footer>
   </div>
 
