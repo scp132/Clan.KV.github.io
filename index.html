@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Clan Kv — Тёмный Форум и Чат</title>
+  <title>Clan Kv — Форум и Админ-панель</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -16,32 +16,41 @@
   <div id="main-content" class="hidden">
     <header>
       <h1>Clan Kv — Форум</h1>
-      <p>Онлайн-чат и обсуждения без регистрации</p>
+      <p>Добро пожаловать в центр управления и обсуждений</p>
     </header>
 
     <main>
       <section id="forum">
         <h2>Форум</h2>
         <article class="post">
-          <h3>Лучшие читы для Rust</h3>
-          <p>Обменивайтесь конфигами и советами!</p>
+          <h3>🔥 Лучшие читы для Rust</h3>
+          <p>Поделитесь конфигами, опытом и обходами.</p>
         </article>
         <article class="post">
-          <h3>Истории банов</h3>
-          <p>Обсуждаем обходы античитов и забавные случаи.</p>
+          <h3>💀 Бан-истории</h3>
+          <p>Расскажите, как вы обошли античит или попались на бан.</p>
         </article>
       </section>
 
-      <section id="chat">
-        <h2>Онлайн-чат</h2>
-        <div id="chat-box"></div>
-        <input type="text" id="msgInput" placeholder="Напишите сообщение..." />
-        <button onclick="sendMsg()">Отправить</button>
+      <section id="admin-panel">
+        <h2>🛠️ Панель администратора</h2>
+        <div class="admin-card">
+          <p><strong>➕ Добавить пост</strong></p>
+          <button>Создать тему</button>
+        </div>
+        <div class="admin-card">
+          <p><strong>🗑️ Удалить пост</strong></p>
+          <button>Выбрать и удалить</button>
+        </div>
+        <div class="admin-card">
+          <p><strong>👥 Управление пользователями</strong></p>
+          <button>Открыть панель</button>
+        </div>
       </section>
     </main>
 
     <footer>
-      <p>© 2025 Clan Kv</p>
+      <p>© 2025 Clan Kv | Admin Access</p>
     </footer>
   </div>
 
