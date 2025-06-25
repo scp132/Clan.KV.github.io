@@ -1,3 +1,4 @@
+/* Общие стили */
 body {
   font-family: 'Segoe UI', sans-serif;
   background-color: #121212;
@@ -5,50 +6,31 @@ body {
   margin: 0;
   padding: 0;
 }
-
 header, footer {
   text-align: center;
   padding: 1.5rem 1rem;
   background-color: #1f1f1f;
-  border-bottom: 1px solid #333;
 }
-
-footer {
-  border-top: 1px solid #333;
-  font-size: 0.9rem;
-  color: #777;
-}
-
 main {
   max-width: 900px;
   margin: 2rem auto;
   padding: 0 1rem;
 }
-
 h1, h2, h3 {
-  margin-bottom: 0.5rem;
   color: #eee;
 }
-
 .post {
   background-color: #222;
   padding: 1rem;
   margin-bottom: 1rem;
-  border-radius: 6px;
   border: 1px solid #333;
-  box-shadow: 0 0 5px #000;
-  transition: 0.3s ease;
+  border-radius: 6px;
 }
-.post:hover {
-  box-shadow: 0 0 12px #555;
-}
-
-/* Прелоадер */
 #preloader {
   position: fixed;
   width: 100vw;
   height: 100vh;
-  background-color: #121212;
+  background: #121212;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -57,25 +39,24 @@ h1, h2, h3 {
 .loader-text {
   color: #aaa;
   font-size: 1.5rem;
-  animation: blink 1.4s infinite;
+  animation: blink 1.2s infinite;
 }
 @keyframes blink {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.3; }
 }
-
 .hidden {
   display: none;
 }
 #main-content {
-  animation: fadeIn 1.2s ease-in-out;
+  animation: fadeIn 1s ease;
 }
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px);}
-  to { opacity: 1; transform: translateY(0);}
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* Панель администратора */
+/* Админка */
 #admin-panel {
   background: #181818;
   border: 1px solid #333;
@@ -96,8 +77,26 @@ h1, h2, h3 {
   padding: 0.6rem 1rem;
   border-radius: 4px;
   cursor: pointer;
-  transition: background 0.3s;
 }
-.admin-card button:hover {
-  background-color: #666;
+.admin-form {
+  margin-top: 1.5rem;
+  background: #1a1a1a;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #333;
+}
+.admin-form input, .admin-form textarea {
+  width: 100%;
+  margin-bottom: 0.7rem;
+  padding: 0.6rem;
+  border: 1px solid #444;
+  background: #222;
+  color: #ccc;
+  border-radius: 4px;
+}
+.admin-form button {
+  background-color: #555;
+}
+#post-list li {
+  margin: 0.5rem 0;
 }
