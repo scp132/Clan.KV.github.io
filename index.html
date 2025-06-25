@@ -1,88 +1,148 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Clan Kv — Форум и Админ-панель</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ｇｒａｆｆｔ Ｒｕｓｔ</title>
+  <script>
+    const SUPABASE_URL = 'https://hhkhbxrzswqufgpcnpzb.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhoa2hieHJ6c3dxdWZncGNucHpiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4NjE2MDgsImV4cCI6MjA2NjQzNzYwOH0.DEuLfMqpUyhAygPD-8YhkjLw9t__j7PWmbTL0vEfmfA';
+  </script>
+  <script src="https://unpkg.com/@supabase/supabase-js"></script>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      background: #121212;
+      color: #ccc;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+    }
+    header, footer {
+      background: #1e1e1e;
+      padding: 1rem;
+      text-align: center;
+    }
+    nav a {
+      margin: 0 1rem;
+      color: #ccc;
+      text-decoration: none;
+      transition: 0.3s ease-in-out;
+      padding: 0.3rem 0.6rem;
+      border-radius: 6px;
+    }
+    nav a:hover {
+      background: linear-gradient(90deg, #9b59b6, #1abc9c);
+      color: white;
+      box-shadow: 0 0 10px #1abc9c, 0 0 20px #9b59b6;
+    }
+    main {
+      padding: 2rem;
+    }
+    #auth-section {
+      background: #1a1a1a;
+      padding: 1.5rem;
+      border-radius: 10px;
+      max-width: 400px;
+      margin: auto;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+    }
+    form input {
+      padding: 0.7rem;
+      margin: 0.5rem 0;
+      width: 100%;
+      border: none;
+      border-radius: 5px;
+      background-color: #1e1e1e;
+      color: #ccc;
+      transition: all 0.3s ease;
+    }
+    form input:focus {
+      outline: none;
+      box-shadow: 0 0 10px #00ffff;
+      background-color: #222;
+    }
+    input[type="password"]:not(:focus) {
+      filter: blur(2px);
+    }
+    form button {
+      padding: 0.7rem;
+      width: 100%;
+      margin-top: 1rem;
+      border: none;
+      border-radius: 5px;
+      background: linear-gradient(45deg, #00bcd4, #1de9b6);
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.4s ease;
+    }
+    form button:hover {
+      background: linear-gradient(45deg, #1de9b6, #00bcd4);
+      box-shadow: 0 0 12px #1de9b6;
+    }
+    h1 {
+      font-weight: bold;
+      font-size: 2.5rem;
+      background: linear-gradient(270deg, #00f, #0ff, #0f0, #ff0, #f00, #f0f);
+      background-size: 600% 600%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: rainbowGlow 8s ease infinite;
+    }
+
+    @keyframes rainbowGlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+  </style>
 </head>
 <body>
+  <header>
+    <h1>Ｇｒａｆｆｔ Ｒｕｓｔ</h1>
+    <nav>
+      <a href="#">Главная</a>
+      <a href="#categories">Категории</a>
+      <a href="#search">Поиск</a>
+      <a href="#rules">Правила</a>
+      <a href="#auth-section">Вход / Регистрация</a>
+    </nav>
+  </header>
 
-  <!-- Загрузочный экран -->
-  <div id="preloader">
-    <div class="loader-text">Загрузка...</div>
-  </div>
+  <main>
+    <section id="auth-section">
+      <h2>Регистрация / Вход</h2>
+      <form id="login-form">
+        <input type="email" id="email" placeholder="Email" required />
+        <input type="password" id="password" placeholder="Пароль" required />
+        <button type="submit">Войти / Зарегистрироваться</button>
+      </form>
+      <div id="auth-msg"></div>
+    </section>
+  </main>
 
-  <div id="main-content" class="hidden">
-    <header>
-      <h1>Clan Kv — Форум</h1>
-      <p>Добро пожаловать в центр управления</p>
-    </header>
+  <footer>
+    <p>© 2025 Grafft Rust</p>
+  </footer>
 
-    <main>
-      <!-- 📂 Форум -->
-      <section id="forum">
-        <h2>Форум</h2>
-        <div id="forum-posts">
-          <article class="post">
-            <h3>🔥 Лучшие читы для Rust</h3>
-            <p>Поделитесь конфигами и обходами.</p>
-          </article>
-          <article class="post">
-            <h3>💀 Бан-истории</h3>
-            <p>Обсуждаем античиты, обходы и наказания.</p>
-          </article>
-        </div>
-      </section>
+  <script>
+    const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-      <!-- ⚙️ Админ-панель -->
-      <section id="admin-panel">
-        <h2>🛠️ Панель администратора</h2>
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
 
-        <div class="admin-card">
-          <p><strong>➕ Добавить пост</strong></p>
-          <button onclick="showAddPost()">Создать тему</button>
-        </div>
+      const { data, error } = await client.auth.signUp({ email, password });
+      const msg = document.getElementById('auth-msg');
 
-        <div class="admin-card">
-          <p><strong>🗑️ Удалить пост</strong></p>
-          <button onclick="showDeleteOptions()">Выбрать и удалить</button>
-        </div>
-
-        <div class="admin-card">
-          <p><strong>👥 Управление пользователями</strong></p>
-          <button onclick="showUserPanel()">Открыть панель</button>
-        </div>
-
-        <!-- 📝 Форма добавления поста -->
-        <div id="add-post-form" class="admin-form hidden">
-          <h3>📌 Новый пост</h3>
-          <input type="text" id="post-title" placeholder="Заголовок поста">
-          <textarea id="post-content" placeholder="Текст поста"></textarea>
-          <button onclick="addPost()">Добавить</button>
-        </div>
-
-        <!-- ❌ Удаление -->
-        <div id="delete-posts" class="admin-form hidden">
-          <h3>🗑️ Выберите посты для удаления</h3>
-          <ul id="post-list"></ul>
-          <button onclick="deleteSelected()">Удалить выбранные</button>
-        </div>
-
-        <!-- 👥 Панель пользователей -->
-        <div id="user-panel" class="admin-form hidden">
-          <h3>👥 Пользователи</h3>
-          <p>Пользователь: <strong>Guest#001</strong> — <em>Обычный</em></p>
-          <p>Пользователь: <strong>RustKing#007</strong> — <em>Модератор</em></p>
-        </div>
-      </section>
-    </main>
-
-    <footer>
-      <p>© 2025 Clan Kv</p>
-    </footer>
-  </div>
-
-  <script src="script.js"></script>
+      if (error && error.message.includes('already registered')) {
+        const { data: loggedUser, error: loginError } = await client.auth.signInWithPassword({ email, password });
+        msg.textContent = loginError ? `Ошибка входа: ${loginError.message}` : `Добро пожаловать, ${loggedUser.user.email}`;
+      } else {
+        msg.textContent = error ? `Ошибка: ${error.message}` : `Регистрация успешна, проверьте почту.`;
+      }
+    });
+  </script>
 </body>
 </html>
