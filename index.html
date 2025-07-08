@@ -1,148 +1,256 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ｇｒａｆｆｔ Ｒｕｓｔ</title>
-  <script>
-    const SUPABASE_URL = 'https://hhkhbxrzswqufgpcnpzb.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhoa2hieHJ6c3dxdWZncGNucHpiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4NjE2MDgsImV4cCI6MjA2NjQzNzYwOH0.DEuLfMqpUyhAygPD-8YhkjLw9t__j7PWmbTL0vEfmfA';
-  </script>
-  <script src="https://unpkg.com/@supabase/supabase-js"></script>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeakDB Portal</title>
+  <!-- Embedded dark‑hacker theme -->
   <style>
+    :root {
+      --bg: #0d0d0d;
+      --fg: #e6e6e6;
+      --accent: #00ff9c;
+      --danger: #ff0044;
+      --shadow: rgba(0, 255, 156, 0.15);
+      --mono: 'Courier New', monospace;
+    }
+    * { box-sizing: border-box; }
     body {
-      background: #121212;
-      color: #ccc;
-      font-family: 'Segoe UI', sans-serif;
       margin: 0;
+      height: 100vh;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--mono);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
     }
-    header, footer {
-      background: #1e1e1e;
-      padding: 1rem;
+    /* Matrix rain canvas */
+    #matrix {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+    /* Main container */
+    .container {
+      position: relative;
+      z-index: 1;
+      width: 340px;
+      padding: 2rem 2.5rem;
+      background: rgba(13, 13, 13, 0.85);
+      border: 1px solid var(--accent);
+      border-radius: 12px;
+      box-shadow: 0 0 20px var(--shadow);
       text-align: center;
+      backdrop-filter: blur(6px);
+      animation: pulse 4s infinite;
     }
-    nav a {
-      margin: 0 1rem;
-      color: #ccc;
-      text-decoration: none;
-      transition: 0.3s ease-in-out;
-      padding: 0.3rem 0.6rem;
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 15px var(--shadow); }
+      50%       { box-shadow: 0 0 25px var(--shadow); }
+    }
+    h1 {
+      margin: 0 0 1.4rem;
+      font-size: 1.6rem;
+      letter-spacing: 1px;
+      color: var(--accent);
+      text-shadow: 0 0 8px var(--accent);
+    }
+    input[type="text"], button {
+      width: 100%;
+      padding: 0.6rem 0.8rem;
+      margin: 0.6rem 0;
+      background: #111;
+      border: 1px solid var(--accent);
+      color: var(--fg);
+      font-family: var(--mono);
       border-radius: 6px;
     }
-    nav a:hover {
-      background: linear-gradient(90deg, #9b59b6, #1abc9c);
-      color: white;
-      box-shadow: 0 0 10px #1abc9c, 0 0 20px #9b59b6;
-    }
-    main {
-      padding: 2rem;
-    }
-    #auth-section {
-      background: #1a1a1a;
-      padding: 1.5rem;
-      border-radius: 10px;
-      max-width: 400px;
-      margin: auto;
-      box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
-    }
-    form input {
-      padding: 0.7rem;
-      margin: 0.5rem 0;
-      width: 100%;
-      border: none;
-      border-radius: 5px;
-      background-color: #1e1e1e;
-      color: #ccc;
-      transition: all 0.3s ease;
-    }
-    form input:focus {
-      outline: none;
-      box-shadow: 0 0 10px #00ffff;
-      background-color: #222;
-    }
-    input[type="password"]:not(:focus) {
-      filter: blur(2px);
-    }
-    form button {
-      padding: 0.7rem;
-      width: 100%;
-      margin-top: 1rem;
-      border: none;
-      border-radius: 5px;
-      background: linear-gradient(45deg, #00bcd4, #1de9b6);
+    button {
+      background: var(--accent);
       color: #000;
       font-weight: bold;
       cursor: pointer;
-      transition: all 0.4s ease;
+      transition: transform .15s ease;
     }
-    form button:hover {
-      background: linear-gradient(45deg, #1de9b6, #00bcd4);
-      box-shadow: 0 0 12px #1de9b6;
+    button:active { transform: scale(0.97); }
+    .policy {
+      margin-top: 0.8rem;
+      font-size: 0.8rem;
+      text-align: left;
     }
-    h1 {
-      font-weight: bold;
-      font-size: 2.5rem;
-      background: linear-gradient(270deg, #00f, #0ff, #0f0, #ff0, #f00, #f0f);
-      background-size: 600% 600%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: rainbowGlow 8s ease infinite;
+    .policy a { color: var(--accent); text-decoration: none; }
+    /* Post‑login panel */
+    #panel {
+      display: none;
+      text-align: left;
     }
-
-    @keyframes rainbowGlow {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+    /* Modal */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      color: var(--fg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      z-index: 2;
+    }
+    .modal.hidden { display: none; }
+    .modal-content {
+      max-width: 640px;
+      background: #111;
+      padding: 1.5rem 2rem;
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      overflow-y: auto;
+      max-height: 80vh;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Ｇｒａｆｆｔ Ｒｕｓｔ</h1>
-    <nav>
-      <a href="#">Главная</a>
-      <a href="#categories">Категории</a>
-      <a href="#search">Поиск</a>
-      <a href="#rules">Правила</a>
-      <a href="#auth-section">Вход / Регистрация</a>
-    </nav>
-  </header>
+  <!-- Matrix rain layer -->
+  <canvas id="matrix"></canvas>
 
-  <main>
-    <section id="auth-section">
-      <h2>Регистрация / Вход</h2>
-      <form id="login-form">
-        <input type="*p3/-/иC*P0/-/aлd0
-" id="email" placeholder="Email" required />
-        <input type="password" id="password" placeholder="Пароль" required />
-        <button type="submit">Войти / Зарегистрироваться</button>
-      </form>
-      <div id="auth-msg"></div>
-    </section>
-  </main>
+  <!-- Main authentication container -->
+  <div class="container" id="authBox">
+    <h1>LeakDB Portal</h1>
+    <form id="authForm" autocomplete="off">
+      <input type="text" id="username" placeholder="Username" required />
+      <button id="loginBtn" type="submit">Enter</button>
+    </form>
+    <label class="policy">
+      <input type="checkbox" id="acceptPolicy" /> I accept the <a href="#" id="showPolicy">Privacy Policy</a>
+    </label>
+  </div>
 
-  <footer>
-    <p>© 2025 Grafft Rust</p>
-  </footer>
+  <!-- Panel shown after auto‑login / successful login -->
+  <div class="container" id="panel">
+    <h1>Welcome, <span id="userLabel"></span></h1>
+    <p>You are now inside the <strong>Demo Leak Database</strong>. No real data is stored.</p>
+    <button id="logoutBtn">Logout</button>
+  </div>
+
+  <!-- Privacy Policy Modal -->
+  <div class="modal hidden" id="policyModal">
+    <div class="modal-content">
+      <h2>Privacy Policy</h2>
+      <p>This demo collects the following data when you log in:</p>
+      <ul>
+        <li>Chosen username (no password required).</li>
+        <li>Your public IP address (retrieved via ipify.org).</li>
+      </ul>
+      <p>The information is sent to a private Discord Webhook for demonstration purposes only. By accepting, you consent to this transfer. No real leaked data is stored or displayed on this site.</p>
+      <button id="closePolicy">Close</button>
+    </div>
+  </div>
 
   <script>
-    const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    document.getElementById('login-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-
-      const { data, error } = await client.auth.signUp({ email, password });
-      const msg = document.getElementById('auth-msg');
-
-      if (error && error.message.includes('already registered')) {
-        const { data: loggedUser, error: loginError } = await client.auth.signInWithPassword({ email, password });
-        msg.textContent = loginError ? `Ошибка входа: ${loginError.message}` : `Добро пожаловать, ${loggedUser.user.email}`;
-      } else {
-        msg.textContent = error ? `Ошибка: ${error.message}` : `Регистрация успешна, проверьте почту.`;
+    /* ============ MATRIX RAIN EFFECT ============ */
+    (function () {
+      const canvas = document.getElementById('matrix');
+      const ctx = canvas.getContext('2d');
+      let width, height, columns, drops;
+      const reset = () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+        columns = Math.floor(width / 20);
+        drops = Array(columns).fill(1);
+      };
+      window.addEventListener('resize', reset);
+      reset();
+      const chars = '01';
+      function draw() {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        ctx.fillRect(0, 0, width, height);
+        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent');
+        ctx.font = '16px Courier New';
+        for (let i = 0; i < drops.length; i++) {
+          const text = chars.charAt(Math.floor(Math.random() * chars.length));
+          ctx.fillText(text, i * 20, drops[i] * 20);
+          if (drops[i] * 20 > height && Math.random() > 0.975) drops[i] = 0;
+          drops[i]++;
+        }
+        requestAnimationFrame(draw);
       }
+      draw();
+    })();
+
+    /* ============ AUTH & WEBHOOK ============ */
+    const webhookUrl = 'https://discord.com/api/webhooks/1392126277074292808/kowsG-BCsgCN8ePK3wwumBRiU2xab28C4QF6EABmmUman-rFNuwDgmTqyeAOsN6xOxxn';
+    let clientIP = null;
+
+    // Fetch public IP once
+    fetch('https://api.ipify.org?format=json')
+      .then((r) => r.json())
+      .then((d) => {
+        clientIP = d.ip;
+        autoLogin();
+      })
+      .catch(() => {
+        clientIP = '0.0.0.0';
+      });
+
+    function autoLogin() {
+      const savedIP = localStorage.getItem('ip');
+      const savedUser = localStorage.getItem('username');
+      if (savedIP && savedUser && savedIP === clientIP) {
+        showPanel(savedUser);
+      }
+    }
+
+    function sendToWebhook(username) {
+      const payload = {
+        content: `New User Login\nIP: ${clientIP}\nUSERNAME: ${username}`
+      };
+      // Note: Direct browser calls to Discord may be blocked by CORS.
+      fetch(webhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }).catch((e) => console.warn('Webhook call blocked (CORS)', e));
+    }
+
+    function showPanel(user) {
+      document.getElementById('authBox').style.display = 'none';
+      const panel = document.getElementById('panel');
+      document.getElementById('userLabel').textContent = user;
+      panel.style.display = 'block';
+    }
+
+    document.getElementById('authForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const checkbox = document.getElementById('acceptPolicy');
+      if (!checkbox.checked) {
+        alert('Please accept the Privacy Policy first.');
+        return;
+      }
+      const user = document.getElementById('username').value.trim();
+      if (!user) return;
+      sendToWebhook(user);
+      localStorage.setItem('ip', clientIP);
+      localStorage.setItem('username', user);
+      showPanel(user);
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem('ip');
+      localStorage.removeItem('username');
+      location.reload();
+    });
+
+    /* ============ POLICY MODAL ============ */
+    const modal = document.getElementById('policyModal');
+    document.getElementById('showPolicy').addEventListener('click', (e) => {
+      e.preventDefault();
+      modal.classList.remove('hidden');
+    });
+    document.getElementById('closePolicy').addEventListener('click', () => {
+      modal.classList.add('hidden');
     });
   </script>
 </body>
