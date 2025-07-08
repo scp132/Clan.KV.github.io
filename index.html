@@ -4,8 +4,7 @@
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LeakDB Portal</title>
-  <!-- Embedded dark‑hacker theme -->
+  <title>LeakDB Portal</title>
   <style>
     :root {
       --bg: #0d0d0d;
@@ -27,14 +26,12 @@
       justify-content: center;
       overflow: hidden;
     }
-    /* Matrix rain canvas */
     #matrix {
       position: fixed;
       inset: 0;
       z-index: 0;
       pointer-events: none;
     }
-    /* Main container */
     .container {
       position: relative;
       z-index: 1;
@@ -83,12 +80,29 @@
       text-align: left;
     }
     .policy a { color: var(--accent); text-decoration: none; }
-    /* Post‑login panel */
     #panel {
       display: none;
+      width: 80vw;
+      height: 80vh;
+      padding: 2rem;
       text-align: left;
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
     }
-    /* Modal */
+    nav {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    nav button {
+      flex: 1;
+      background: #111;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
     .modal {
       position: fixed;
       inset: 0;
@@ -113,44 +127,111 @@
   </style>
 </head>
 <body>
-  <!-- Matrix rain layer -->
   <canvas id="matrix"></canvas>
-
-  <!-- Main authentication container -->
   <div class="container" id="authBox">
-    <h1>LeakDB Portal</h1>
+    <h1>LeakDB Portal</h1>
     <form id="authForm" autocomplete="off">
       <input type="text" id="username" placeholder="Username" required />
       <button id="loginBtn" type="submit">Enter</button>
     </form>
     <label class="policy">
-      <input type="checkbox" id="acceptPolicy" /> I accept the <a href="#" id="showPolicy">Privacy Policy</a>
+      <input type="checkbox" id="acceptPolicy" /> I accept the <a href="#" id="showPolicy">Privacy Policy</a>
     </label>
   </div>
-
-  <!-- Panel shown after auto‑login / successful login -->
   <div class="container" id="panel">
     <h1>Welcome, <span id="userLabel"></span></h1>
-    <p>You are now inside the <strong>Demo Leak Database</strong>. No real data is stored.</p>
-    <button id="logoutBtn">Logout</button>
+    <nav>
+      <button onclick="switchTab('forum')">Forum</button>
+      <button onclick="switchTab('about')">About</button>
+      <button onclick="logout()">Logout</button>
+    </nav>
+    <div class="tab-content" id="forumTab">
+      <h2>Forum</h2>
+      <p>This is a simple mock forum section.</p>
+      <ul>
+        <li><strong>Thread:</strong> How to secure your data?</li>
+        <li><strong>Thread:</strong> Latest database breach news</li>
+        <li><strong>Thread:</strong> Forum feedback and suggestions</li>
+      </ul>
+    </div>
+    <div class="tab-content" id="aboutTab">
+      <h2>About</h2>
+      <p>This is a demonstration portal. No real data is stored or displayed.</p>
+      <p>Created as a stylized interface prototype.</p>
+    </div>
   </div>
-
-  <!-- Privacy Policy Modal -->
   <div class="modal hidden" id="policyModal">
     <div class="modal-content">
-      <h2>Privacy Policy</h2>
+      <h2>Privacy Policy</h2>
       <p>This demo collects the following data when you log in:</p>
       <ul>
         <li>Chosen username (no password required).</li>
         <li>Your public IP address (retrieved via ipify.org).</li>
       </ul>
-      <p>The information is sent to a private Discord Webhook for demonstration purposes only. By accepting, you consent to this transfer. No real leaked data is stored or displayed on this site.</p>
+      <p>The information is sent to a private Discord Webhook for demonstration purposes only. By accepting, you consent to this transfer. No real leaked data is stored or displayed on this site.</p>
       <button id="closePolicy">Close</button>
     </div>
   </div>
-
   <script>
-    /* ============ MATRIX RAIN EFFECT ============ */
+    const webhookUrl = 'https://discord.com/api/webhooks/1392126277074292808/kowsG-BCsgCN8ePK3wwumBRiU2xab28C4QF6EABmmUman-rFNuwDgmTqyeAOsN6xOxxn';
+    let clientIP = null;
+    fetch('https://api.ipify.org?format=json')
+      .then((r) => r.json())
+      .then((d) => {
+        clientIP = d.ip;
+        autoLogin();
+      })
+      .catch(() => { clientIP = '0.0.0.0'; });
+    function autoLogin() {
+      const savedIP = localStorage.getItem('ip');
+      const savedUser = localStorage.getItem('username');
+      if (savedIP && savedUser && savedIP === clientIP) {
+        showPanel(savedUser);
+      }
+    }
+    function sendToWebhook(username) {
+      const payload = { content: `New User Login\nIP: ${clientIP}\nUSERNAME: ${username}` };
+      fetch(webhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }).catch((e) => console.warn('Webhook blocked', e));
+    }
+    function showPanel(user) {
+      document.getElementById('authBox').style.display = 'none';
+      document.getElementById('userLabel').textContent = user;
+      document.getElementById('panel').style.display = 'block';
+      switchTab('forum');
+    }
+    function switchTab(id) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.getElementById(id + 'Tab').classList.add('active');
+    }
+    function logout() {
+      localStorage.removeItem('ip');
+      localStorage.removeItem('username');
+      location.reload();
+    }
+    document.getElementById('authForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!document.getElementById('acceptPolicy').checked) {
+        alert('Please accept the Privacy Policy first.');
+        return;
+      }
+      const user = document.getElementById('username').value.trim();
+      if (!user) return;
+      sendToWebhook(user);
+      localStorage.setItem('ip', clientIP);
+      localStorage.setItem('username', user);
+      showPanel(user);
+    });
+    document.getElementById('showPolicy').addEventListener('click', (e) => {
+      e.preventDefault();
+      document.getElementById('policyModal').classList.remove('hidden');
+    });
+    document.getElementById('closePolicy').addEventListener('click', () => {
+      document.getElementById('policyModal').classList.add('hidden');
+    });
     (function () {
       const canvas = document.getElementById('matrix');
       const ctx = canvas.getContext('2d');
@@ -179,79 +260,6 @@
       }
       draw();
     })();
-
-    /* ============ AUTH & WEBHOOK ============ */
-    const webhookUrl = 'https://discord.com/api/webhooks/1392126277074292808/kowsG-BCsgCN8ePK3wwumBRiU2xab28C4QF6EABmmUman-rFNuwDgmTqyeAOsN6xOxxn';
-    let clientIP = null;
-
-    // Fetch public IP once
-    fetch('https://api.ipify.org?format=json')
-      .then((r) => r.json())
-      .then((d) => {
-        clientIP = d.ip;
-        autoLogin();
-      })
-      .catch(() => {
-        clientIP = '0.0.0.0';
-      });
-
-    function autoLogin() {
-      const savedIP = localStorage.getItem('ip');
-      const savedUser = localStorage.getItem('username');
-      if (savedIP && savedUser && savedIP === clientIP) {
-        showPanel(savedUser);
-      }
-    }
-
-    function sendToWebhook(username) {
-      const payload = {
-        content: `New User Login\nIP: ${clientIP}\nUSERNAME: ${username}`
-      };
-      // Note: Direct browser calls to Discord may be blocked by CORS.
-      fetch(webhookUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      }).catch((e) => console.warn('Webhook call blocked (CORS)', e));
-    }
-
-    function showPanel(user) {
-      document.getElementById('authBox').style.display = 'none';
-      const panel = document.getElementById('panel');
-      document.getElementById('userLabel').textContent = user;
-      panel.style.display = 'block';
-    }
-
-    document.getElementById('authForm').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const checkbox = document.getElementById('acceptPolicy');
-      if (!checkbox.checked) {
-        alert('Please accept the Privacy Policy first.');
-        return;
-      }
-      const user = document.getElementById('username').value.trim();
-      if (!user) return;
-      sendToWebhook(user);
-      localStorage.setItem('ip', clientIP);
-      localStorage.setItem('username', user);
-      showPanel(user);
-    });
-
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-      localStorage.removeItem('ip');
-      localStorage.removeItem('username');
-      location.reload();
-    });
-
-    /* ============ POLICY MODAL ============ */
-    const modal = document.getElementById('policyModal');
-    document.getElementById('showPolicy').addEventListener('click', (e) => {
-      e.preventDefault();
-      modal.classList.remove('hidden');
-    });
-    document.getElementById('closePolicy').addEventListener('click', () => {
-      modal.classList.add('hidden');
-    });
   </script>
 </body>
 </html>
